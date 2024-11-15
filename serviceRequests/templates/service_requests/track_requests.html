@@ -1,0 +1,121 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h2>Your Service Requests</h2>
+  
+ 
+  <div class="request-cards-container">
+    {% for request in requests %}
+      <div class="request-card" onclick="openModal('{{ request.id }}')">
+        <div class="card-header">
+          <strong>{{ request.service_type }}</strong>
+        </div>
+        <div class="card-body">
+          <p>Status: {{ request.status }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+
+  <div id="modal" class="modal" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <span class="close-button" onclick="closeModal()">×</span>
+      <h2>Service Request Details</h2>
+      
+      <div id="modal-details">
+       
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openModal(requestId) {
+     
+      fetch(`/get_request_details/${requestId}/`)
+        .then(response => response.json())
+        .then(data => {
+          const detailsDiv = document.getElementById('modal-details');
+          detailsDiv.innerHTML = `
+            <p><strong>Description:</strong> ${data.description}</p>
+            <p><strong>Created At:</strong> ${data.created_at}</p>
+            <p><strong>Status:</strong> ${data.status}</p>
+            <p><strong>Updated At:</strong> ${data.updated_at}</p>
+            ${data.resolved_at ? `<p><strong>Resolved At:</strong> ${data.resolved_at}</p>` : ''}
+            ${data.attachment_url ? `<p><strong>Attachment:</strong> <a href="${data.attachment_url}" download>Download File</a></p>` : '<p><strong>Attachment:</strong> No attachment provided</p>'}
+          `;
+          document.getElementById('modal').style.display = 'block';
+        });
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+  </script>
+
+  <style>
+ 
+    .request-cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .request-card {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .request-card:hover {
+      transform: scale(1.05);
+    }
+
+    .card-header {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .card-body p {
+      margin: 10px 0;
+    }
+
+  
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 600px;
+      margin: 100px auto;
+    }
+
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    .modal h2 {
+      margin-top: 0;
+    }
+  </style>
+
+{% endblock %}

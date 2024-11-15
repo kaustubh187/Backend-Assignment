@@ -1,0 +1,14 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h2>Update Service Request Status</h2>
+  <form method="post">
+    {% csrf_token %}
+    {% if form %}
+      {{ form.as_p }}
+      <button type="submit">Update Status</button>
+    {% else %}
+      <p>No form loaded</p>
+    {% endif %}
+  </form>
+{% endblock %}

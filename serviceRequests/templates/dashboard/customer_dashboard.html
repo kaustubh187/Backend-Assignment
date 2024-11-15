@@ -1,0 +1,13 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h2>Welcome, {{ user.username }}!</h2>
+  <p>Here you can track your service requests.</p>
+  <a href="{% url 'create_service_request' %}">Create a new service request</a>
+  <p><a href="{% url 'track_requests' %}">Track Previous Requests</a></p>
+  <ul>
+    {% for request in requests %}
+      <li>{{ request.service_type }} - {{ request.status }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

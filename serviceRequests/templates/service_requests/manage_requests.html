@@ -1,0 +1,44 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h2>Manage Service Requests</h2>
+  <ul>
+    {% for request in requests %}
+      <li>
+        <div>
+          <strong>{{ request.service_type }}</strong> - {{ request.status }}
+          <a href="{% url 'update_request_status' request.id %}">Update</a>
+          <button type="button" onclick="toggleDetails('{{ request.id }}')">Details</button>
+        </div>
+
+        <div id="details-{{ request.id }}" style="display: none; margin-top: 10px; border: 1px solid #ddd; padding: 10px;">
+          <p><strong>Description:</strong> {{ request.description }}</p>
+          <p><strong>Customer:</strong> {{ request.customer.user.username }}</p>
+          <p><strong>Created At:</strong> {{ request.created_at }}</p>
+          <p><strong>Updated At:</strong> {{ request.updated_at }}</p>
+          {% if request.resolved_at %}
+            <p><strong>Resolved At:</strong> {{ request.resolved_at }}</p>
+          {% endif %}
+
+        
+          {% if request.attachment %}
+            <p><strong>Attachment:</strong> <a href="{{ request.attachment.url }}" download>Download File</a></p>
+          {% else %}
+            <p><strong>Attachment:</strong> No attachment provided</p>
+          {% endif %}
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <script>
+    function toggleDetails(requestId) {
+      var detailsDiv = document.getElementById('details-' + requestId);
+      if (detailsDiv.style.display === 'none') {
+        detailsDiv.style.display = 'block';
+      } else {
+        detailsDiv.style.display = 'none';
+      }
+    }
+  </script>
+{% endblock %}

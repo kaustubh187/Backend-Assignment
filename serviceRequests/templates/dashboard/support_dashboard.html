@@ -1,0 +1,17 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h2>Support Dashboard</h2>
+  <p>Here you can manage customer service requests.</p>
+
+ 
+  <p><a href="{% url 'manage_requests' %}">Go to Manage Requests</a></p>
+
+  <ul>
+    {% for request in requests %}
+      <li>{{ request.service_type }} - {{ request.status }} - 
+        <a href="{% url 'update_request_status' request.id %}">Update Status</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
